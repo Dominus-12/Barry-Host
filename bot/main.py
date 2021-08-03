@@ -83,7 +83,7 @@ async def on_message(message):
 				await message.channel.send(embed = warning)
 
 # Points
-	# This will effectively allow the 'Barian_Points' file to act as a server containing the messages
+	# This will effectively allow the 'bot/Barian_Points' file to act as a server containing the messages
 	def getPoints(filename):
 		file = open(filename, 'r')
 		pointsRecord = []
@@ -101,7 +101,7 @@ async def on_message(message):
 
 		return pointsRecord[1:]
 
-	pointsRecord = getPoints('Barian_Points.csv')
+	pointsRecord = getPoints('bot/Barian_Points.csv')
 
 	# Updates the points 
 	def updatePoints(message, pointsRecord):
@@ -144,7 +144,7 @@ async def on_message(message):
 	if 'Barian Esports' in message.guild.name and message.author.bot == False and 'lounge' in message.channel.name or 'bump' in message.channel.name or 'count' in message.channel.name:
 		# Run the whole thing
 		pointsRecord = updatePoints(message,pointsRecord)
-		writePoints('Barian_Points.csv', pointsRecord)
+		writePoints('bot/Barian_Points.csv', pointsRecord)
 	# Then run all the commands on the message because the possibility exists that it was a command
 	await client.process_commands(message)	
 	
@@ -153,7 +153,7 @@ async def on_message(message):
 async def hotFix(ctx):
 	admins = [member for member in ctx.guild.members if member.guild_permissions.administrator == True]
 	audits = await ctx.guild.audit_logs(limit = 2200).flatten()
-	file = open('Barian_Points.csv', 'w')
+	file = open('bot/Barian_Points.csv', 'w')
 	file.write('Name,Points\n')
 
 	for admin in admins:
@@ -183,7 +183,7 @@ async def on_member_join(member):
 	guild = member.guild
 	# Checks to see if the person has already been added to the points system
 	if not member.bot:
-		file = open('Barian_Points.csv', 'r')
+		file = open('bot/Barian_Points.csv', 'r')
 		inFile = False
 		for line in file:
 			line = line.split(',')
@@ -193,7 +193,7 @@ async def on_member_join(member):
 		file.close()
 		# If they aren't in the file, then it appends them to the end of it
 		if not inFile:
-			file = open('Barian_Points.csv', 'a')
+			file = open('bot/Barian_Points.csv', 'a')
 			file.write(f'{member.name},0\n')
 	
 	# Assuming it's Barian, it gets the necessary channels that are going to be needed
@@ -227,7 +227,7 @@ async def on_member_join(member):
 
 		# Checks to see if they're in the kicks file and removes them if so
 		def updateKicks():
-			file = open('Barian Kicks.txt', 'r')
+			file = open('bot/Barian Kicks.txt', 'r')
 			kicks = []
 			# Adds each member name to a list of names
 			for line in file:
@@ -242,7 +242,7 @@ async def on_member_join(member):
 					break
 		
 			# Writes the new list of kicked people back up
-			file = open('Barian Kicks.txt', 'w')
+			file = open('bot/Barian Kicks.txt', 'w')
 			for kicked in kicks:
 				file.write(f'{kicked}\n')
 			file.close()
@@ -257,7 +257,7 @@ async def on_member_remove(member):
 	global currentTime
 
 	def checkKicked():
-		file = open('Barian Kicks.txt', 'r')
+		file = open('bot/Barian Kicks.txt', 'r')
 		for line in file:
 			if member.name in line:
 				file.close()
@@ -401,7 +401,7 @@ async def on_user_update(before, after):
 					break # So that we're as speedy as possible
 			
 			# Then rewrite this to the file
-			file = open('Barian_Points.csv', 'w')
+			file = open('bot/Barian_Points.csv', 'w')
 			file.write('Name,Points\n')
 			for person in pointsRecord:
 				name = person['Name']
@@ -913,7 +913,7 @@ async def kick(ctx, target: discord.Member, *reason: str):
 		await logs.send(embed = logging)
 
 		# Keeps a record for the on_member_remove() protocol
-		file = open('Barian Kicks.txt', 'a')
+		file = open('bot/Barian Kicks.txt', 'a')
 		file.write(f'{target.name}\n')
 		file.close()
 	
